@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet =require("helmet");
 const expect = require('chai');
 const socket = require('socket.io');
 const cors = require('cors');
@@ -15,7 +16,19 @@ app.use('/assets', express.static(process.cwd() + '/assets'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet.contentSecurityPolicy({
+  directives :{
+    "script-src":["'self'"],
+    "style-src":["'self'"]
 
+}})),
+
+app.use(
+  // not loading the noSniff() middleware
+  helmet({
+    noSniff: true,
+  })
+)
 //For FCC testing purposes and enables user to connect from outside the hosting platform
 app.use(cors({origin: '*'})); 
 
