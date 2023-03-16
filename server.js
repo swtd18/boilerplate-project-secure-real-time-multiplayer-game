@@ -16,19 +16,10 @@ app.use('/assets', express.static(process.cwd() + '/assets'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(helmet.contentSecurityPolicy({
-  directives :{
-    "script-src":["'self'"],
-    "style-src":["'self'"]
-
-}})),
-
-app.use(
-  // not loading the noSniff() middleware
-  helmet({
-    noSniff: true,
-  })
-)
+app.use(helmet.noSniff());
+app.use(helmet.xssFilter());
+app.use(helmet.noCache());
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
 //For FCC testing purposes and enables user to connect from outside the hosting platform
 app.use(cors({origin: '*'})); 
 
